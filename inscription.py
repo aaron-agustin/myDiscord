@@ -1,13 +1,12 @@
-from tkinter import Tk, Label, Entry, Button, StringVar, messagebox, Toplevel, Text, Scrollbar
+from tkinter import Tk, Label, Entry, Button, StringVar, messagebox
 from hashlib import sha256
 import mysql.connector
-from datetime import datetime
+from interface import create_interface  # Importe la fonction create_interface depuis interface.py
 
-
-# Configurations de la base de données
+# Configuration de la base de données
 db_config = {
-    'user': 'root',
-    'password': 'Mot de Passe',
+    'user': 'Aaron',
+    'password': 'Aaron07!',
     'host': 'localhost',
     'database': 'MyDiscord'
 }
@@ -41,7 +40,6 @@ def inscription():
     except mysql.connector.Error as err:
         messagebox.showerror("Erreur d'inscription", f"Erreur MySQL: {err}")
 
-
 # Fonction pour gérer la connexion
 def connexion():
     mail = mail_var.get()
@@ -55,8 +53,7 @@ def connexion():
 
         if utilisateur:
             messagebox.showinfo("Connexion réussie", "Vous êtes connecté avec succès.")
-            # Redirigez l'utilisateur vers la nouvelle interface du canal
-            canal_interface()
+            create_interface()  # Appel de la fonction pour créer et afficher l'interface graphique
         else:
             messagebox.showerror("Erreur de connexion", "L'adresse e-mail ou le mot de passe est incorrect.")
 
@@ -65,37 +62,6 @@ def connexion():
 
     except mysql.connector.Error as err:
         messagebox.showerror("Erreur de connexion", f"Erreur MySQL: {err}")
-
-# Fonction pour afficher l'interface du canal
-def canal_interface():
-    canal_window = Toplevel(root)
-    canal_window.title("Canal")
-
-    # Zone de texte pour afficher les messages
-    message_history = Text(canal_window, wrap="word", height=20, width=50)
-    message_history.pack(pady=10)
-
-    # Champ de texte pour saisir un nouveau message
-    new_message_entry = Text(canal_window, wrap="word", height=3, width=50)
-    new_message_entry.pack(pady=10)
-
-    # Bouton pour envoyer un message
-    send_button = Button(canal_window, text="Envoyer", command=lambda: envoyer_message(message_history, new_message_entry))
-    send_button.pack(pady=10)
-
-def envoyer_message(message_history, new_message_entry):
-    message = new_message_entry.get("1.0", "end-1c").strip()
-    if message:
-        # Obtenez l'heure actuelle
-        now = datetime.now()
-        
-        # Ajoutez le nouveau message à l'historique
-        message_history.insert("1.0", f"{now.strftime('%H:%M:%S')} - {message}\n")
-        
-        # Effacez le champ de texte pour un nouveau message
-        new_message_entry.delete("1.0", "end")
-    else:
-        messagebox.showwarning("Envoyer un message", "Veuillez entrer un message avant d'envoyer.")
 
 # Configuration de l'interface graphique principale
 root = Tk()
